@@ -7,9 +7,45 @@
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<style>
 		body { margin: 0; overflow: hidden; background-color: #000; }
+		.controls {
+		}
+   		.description {
+   			width: 300px;
+   			height: 200px;
+   			background-color: #fff;
+   			padding: 20px;
+   		}
+
+		.circle {
+			margin: 3px;
+			border-radius: 50%;
+			width: 25px;
+			height: 25px;
+			display: inline-block;
+		}
+
+		#flock-c-legend {
+			background-color: #B54BC1 /*#EC4513*/
+		}
+
+		#flock-e-legend {
+			background-color: #96D811
+		}
+
+		#iss-legend {
+			background-color: #FF0000;
+		}
+
+		.label-text {
+			display: inline-block;
+			vertical-align: top;
+			margin-top: 6px;
+		}
+
     </style>
 </head>
 <body>
+   <div class="description">
     <div class="controls">  
 		<div class="btn-group" data-toggle="buttons">
 		  <label class="btn btn-primary" id ="realtime">
@@ -22,6 +58,26 @@
 		  </label>
 		</div>
     </div>
+    <div>
+      <div id="flock-c-legend" class="circle"></div>
+      <div class="label-text"> <a href="http://spaceflight101.com/flock/"> Planet Labs Flock 1C </a> </div>
+    </div>
+
+    <div>
+      <div id="flock-e-legend" class="circle"></div>
+      <div class="label-text"> <a href="http://spaceflight101.com/flock/"> Planet Labs Flock 1E </a> </div>
+    </div>
+    
+    <div>
+      <div id="iss-legend" class="circle"></div>
+      <div class="label-text"> <a href=""> ISS </a> </div>
+    </div>
+    
+
+     <a href="https://github.com/Chandler/orbits"> View on Github </a>
+     <p>
+     <a href="twitter.com/cba"> Created by @cba</a>
+  </div>
 	
 	<div id="scene"></div>
 

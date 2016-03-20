@@ -211,9 +211,13 @@
 
     function satColors(name) {
         if (name.includes("1C")) {
-            return 0xEC4513; //orange
-        } else {    
+            return 0xB54BC1 //purple //0xEC4513; //orange
+        } else if (name.includes("1E")) {    
             return 0x96D811; //green
+        } else if (name.includes("ISS")) {
+            return 0xFF0000 //red
+        } else {
+            return 0x000000
         }
     }
 }());
