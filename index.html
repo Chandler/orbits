@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Planet Labs</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<style>
+		body { margin: 0; overflow: hidden; background-color: #000; }
+    </style>
+</head>
+<body>
+    <div class="controls">  
+		<div class="btn-group" data-toggle="buttons">
+		  <label class="btn btn-primary" id ="realtime">
+		    <input type="radio" name="options" id="option1" autocomplete="off">
+		    real time
+		  </label>
+		  <label class="btn btn-primary active" id="fast">
+		    <input type="radio" name="options" id="option2" autocomplete="off" checked>
+		    fast forward
+		  </label>
+		</div>
+    </div>
+	
+	<div id="scene"></div>
+
+	<script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="js/libs/three.min.js"></script>
+	<script src="js/libs/Detector.js"></script>		
+	<script src="js/libs/TrackballControls.js"></script>		
+	<script src="js/libs/satellite.js"></script>  
+	<script src="js/libs/sunCalc.js"></script>  
+	<script src="js/satellite_data.js"></script>  
+	<script src="js/scene.js"></script>  
+</body>
+</html>
