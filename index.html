@@ -11,7 +11,7 @@
 		}
    		.description {
    			width: 300px;
-   			height: 200px;
+   			height: auto;
    			background-color: #fff;
    			padding: 20px;
    		}
@@ -41,11 +41,18 @@
 			vertical-align: top;
 			margin-top: 6px;
 		}
+		#time {
+			margin-bottom: 10px;
+			color: #444348;
+		}
 
     </style>
 </head>
 <body>
    <div class="description">
+    <div id="time">
+     &zwnj; <!-- invisible char for spacing, time to be added in with javascript -->
+    </div>
     <div class="controls">  
 		<div class="btn-group" data-toggle="buttons">
 		  <label class="btn btn-primary" id ="realtime">
@@ -70,7 +77,7 @@
     
     <div>
       <div id="iss-legend" class="circle"></div>
-      <div class="label-text"> <a href=""> ISS </a> </div>
+      <div class="label-text"> <a href="https://en.wikipedia.org/wiki/International_Space_Station"> ISS </a> </div>
     </div>
     
 
@@ -88,6 +95,7 @@
 	<script src="js/libs/TrackballControls.js"></script>		
 	<script src="js/libs/satellite.js"></script>  
 	<script src="js/libs/sunCalc.js"></script>  
+	<script src="js/libs/date_format.js"></script>  
 	<script src="js/satellite_data.js"></script>  
 	<script src="js/scene.js"></script>  
 </body>

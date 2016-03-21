@@ -65,13 +65,17 @@
     // function and I haven't totally figured out the right way to do that yet
     var secondsPastCurrentTime = 0    
     var fastFoward = true
-
+    
     // Main animation loop
     function render() {
         controls.update();
         var date = nextDate()
         updateSatellites(satellites, date);
         updateSun(light, date)
+        if (! isNaN(date)) {
+            $("#time").text(dateFormat(date, "mmmm dS, yyyy, h:MM TT", true) + " UTC");    
+        }
+        // $("#time").text(date.toString());
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
