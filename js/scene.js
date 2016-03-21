@@ -141,12 +141,19 @@
             // https://en.wikipedia.org/wiki/Earth-centered_inertial
             var positionEci = positionAndVelocity.position;
 
+
             // https://en.wikipedia.org/wiki/ECEF
             // ecef is the fixed earth coordinate system which is what we want
             // in this example since our earth doesn't rotate.
             // if earth was rotating instead of the sun we would need the ECI
             // coordinates I think
             var positionEcf = satellite.eciToEcf(positionEci, gmst);
+
+            // xd = positionEcf.x
+            // yd = positionEcf.y
+            // zd = positionEcf.z
+            // var altitude = Math.floor(Math.sqrt(xd*xd + yd*yd + zd*zd) - earthRadiusKm)
+            // $("#flock-c-altitude").text(" - " + altitude + " km");    
 
             // update our satellites to their ECEF positions
             satellites[i]["scene_object"].position.x = positionEcf.x/scale;
