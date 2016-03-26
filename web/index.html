@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Satellite Viz</title>
+	<link rel="stylesheet" type="text/css" href="css/libs/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/libs/select2.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+	<style>
+		
+    </style>
+</head>
+<body>
+   <div class="description">
+    <div class="time">
+     &zwnj; <!-- invisible char for spacing, time to be added in with javascript -->
+    </div>
+    <div class="controls">  
+		<div class="btn-group" data-toggle="buttons">
+		  <label class="btn btn-primary" id ="realtime">
+		    <input type="radio" name="options" id="option1" autocomplete="off">
+		    real time
+		  </label>
+		  <label class="btn btn-primary active" id="100x">
+		    <input type="radio" name="options" id="option2" autocomplete="off" checked>
+		    100x
+		  </label>
+          <label class="btn btn-primary " id="1000x">
+            <input type="radio" name="options" id="option2" autocomplete="off" checked>
+            1000x
+          </label>
+		</div>
+    </div>
+
+    <div id="more_options" class="hidden_on_desktop">
+        more options avaliable on displays wider than 600px
+    </div>
+
+    <div id="tag-selector-wrapper" class="hidden_on_mobile">
+        <select id="tag-selector" ></select>
+    </div>
+
+    <div id="legend" class="hidden_on_mobile">
+        <div>
+          <div id="flock-c-legend" class="circle"></div>
+          <div class="label-text"> <a href="http://spaceflight101.com/flock/">
+          Planet Labs Flock 1C <span id="flock-c-altitude"> </span>
+          </a> </div>
+        </div>
+
+        <div>
+          <div id="flock-e-legend" class="circle"></div>
+          <div class="label-text"> <a href="http://spaceflight101.com/flock/"> Planet Labs Flock 1E </a> </div>
+        </div>
+        
+        <div>
+          <div id="spire-legend" class="circle"></div>
+          <div class="label-text"> <a href=""> Spire Lemur 2 </a> </div>
+        </div>
+        
+        <div>
+          <div id="iss-legend" class="circle"></div>
+          <div class="label-text"> <a href="https://en.wikipedia.org/wiki/International_Space_Station"> ISS </a> </div>
+        </div>
+        
+        <div>
+          <div id="hubble-legend" class="circle"></div>
+          <div class="label-text"> <a href=""> Hubble </a> </div>
+        </div>
+    </div>
+    
+     <a href="https://github.com/Chandler/orbits"> View on Github </a>
+  </div>
+	
+	<div id="scene"></div>
+
+	<script src="js/libs/jquery-2.2.2.min.js"></script>
+	<script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/libs/select2.js"></script>
+	<script src="js/libs/three.min.js"></script>
+	<script src="js/libs/Detector.js"></script>		
+	<script src="js/libs/TrackballControls.js"></script>		
+	<script src="js/libs/satellite.js"></script>  
+	<script src="js/libs/date_format.js"></script>  
+	<script src="js/app.js"></script>  
+</body>
+</html>
