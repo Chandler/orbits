@@ -1,7 +1,6 @@
 // huge thanks to Bjorn Sandvik's webgl earth tutorial
 // http://blog.thematicmapping.org/2013/09/creating-webgl-earth-with-threejs.html
 
-
 function keys(obj){
   var arr = [];
   var has = Object.prototype.hasOwnProperty;
@@ -14,21 +13,58 @@ function keys(obj){
   return arr;
 };
 
+function isInArray(value, array) {
+  return array.indexOf(value) > -1;
+}
+
+
 (function () {
     $.ajax({
       dataType: "json",
       url: "generated_data/tles_and_tags.json",
       success: function(sat_data) {
-        var tles = sat_data["tles"]
-        var tags = sat_data["tags"]
-        runApp(tles, tags)
+        var tles   = sat_data["tles"]
+        var tagMap = sat_data["tags"]
+        runApp(tles, tagMap)
       },
       error: function(error) {
         console.log(error)
       }
     })
 
-    function runApp(tles, tags) {
+    function runApp(tles, tagMap) {
+        var purple        = "#B54BC1"
+        var cyan          = "#13E2EC"
+        var red           = "#FF0000"
+        var blue          = "#0089FF"
+        var light_green   = "#96D811"
+        var orange        = "#FF9800"
+        var teal          = "#009688"
+        var yellow        = "#FFEB3B"
+        var grey          = "#9E9E9E"
+        var darker_purple = "#42178E"
+        var puke_green    = "#CDDC39"
+        var brown         = "#795548"
+        var white         = "#FFFFFF"
+        var hot_pink      = "#F900FD"
+
+        var colors = [
+            purple,       
+            cyan,         
+            red,          
+            blue,         
+            light_green,  
+            orange,       
+            teal,         
+            yellow,      
+            grey,         
+            darker_purple,
+            puke_green,   
+            brown,        
+            white,        
+            hot_pink,     
+        ]
+
         var webglEl = document.getElementById('scene');
 
         if (!Detector.webgl) {
@@ -46,7 +82,7 @@ function keys(obj){
 
         var scene = new THREE.Scene();
         var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(width, height);
+        renderer.setSize(width, height)
 
         var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
         camera.position.z = 3; //position camera above north pole
@@ -55,6 +91,7 @@ function keys(obj){
         camera.rotation.order = 'YXZ'
         
         // create ambient and directional lighting
+        // scene.add(new THREE.AmbientLight(0xffffff));
         scene.add(new THREE.AmbientLight(0x333333));
         var light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(10000/scale,10000/scale,10000/scale);
@@ -80,41 +117,38 @@ function keys(obj){
         // add colored axi extending twice the width of earth
         scene.add(new THREE.AxisHelper((earthRadiusKm*2)/scale));
 
-        // ----> Stars make it harder to see high orbit satellites, rm them
-        // var stars = new THREE.Mesh(
-        //     new THREE.SphereGeometry(radius*10, segments, segments), 
-        //     new THREE.MeshBasicMaterial({
-        //         map:  THREE.ImageUtils.loadTexture('images/galaxy_starfield.png'), 
-        //         side: THREE.BackSide
-        //     })
-        // );
-        // scene.add(stars);
-
         satellites = buildSatellites(scene, tles)
-
-        // controls update camera position based on mouse dragging
-        var controls = new THREE.TrackballControls(camera);
-        webglEl.appendChild(renderer.domElement);
-        render();
 
         // these two variables are used for the two pieces of global state, 
         // because they have to be accessed by the onclicks and the nextdate() 
         // function and I haven't totally figured out the right way to do that yet
         var secondsPastCurrentTime = 0    
-        var speedupMultiplier = 100
+        var speedupMultiplier = 1000
         var resetAfterThisManySeconds = 86400
+        var selectedTags = ["Cubesats"]
+        var orbitConfig = "one_orbit"
+
+        // controls update camera position based on mouse dragging
+        var controls = new THREE.TrackballControls(camera);
+        webglEl.appendChild(renderer.domElement);
+        render();
+        
+        var count = 0
 
         // Main animation loop
         function render() {
             controls.update();
             var date = nextDate();
-
-            updateSatellites(filterSatellites(satellites), date);
+            updateSatellites(satellites, date, selectedTags, tagMap);
             updateSun(light, date)
             if (!isNaN(date)) {
                 $(".time").text(dateFormat(date, "mmmm dS, yyyy, h:MM TT", true) + " UTC");    
             }
-            requestAnimationFrame(render);
+            count = count + 1
+            // if(count >=10) {
+            if(true) {
+                requestAnimationFrame(render);  
+            }
             renderer.render(scene, camera);
         }
 
@@ -133,34 +167,43 @@ function keys(obj){
             secondsPastCurrentTime = 0
         })
 
-        // var data = [
-        //     {
-        //         id: '',
-        //         text: 'Citrus',
-        //         children: [
-        //             { id: 'c1', text: 'Grapefruit' },
-        //             { id: 'c2', text: 'Orange' },
-        //             { id: 'c3', text: 'Lemon' },
-        //             { id: 'c4', text: 'Lime' }
-        //         ]
-        //     },
-        //     {
-        //         id: '',
-        //         text: 'Other',
-        //         children: [
-        //             { id: 'o1', text: 'Apple' },
-        //             { id: 'o2', text: 'Mango' },
-        //             { id: 'o3', text: 'Banana' }
-        //         ]
-        //     }
-        // ];
-
-        $("#tag-selector").select2({
-          data: keys(tags),
-          multiple: true
+        $('#orbits_off').on('click', function () {
+            orbitConfig = "off"
         })
 
+        $('#orbits_one_orbit').on('click', function () {
+            orbitConfig = "one_orbit"
+        })
 
+        $('#orbits_one_day').on('click', function () {
+            orbitConfig = "one_day"
+        })
+
+        $("#tag-selector").select2({
+           data: keys(tagMap),
+           multiple: true
+        })
+
+        $("#tag-selector").select2().val(selectedTags)
+
+        $("#tag-selector").on("select2:open", function (e) {
+            $(".select2-results__options").niceScroll({
+                cursorborder: 'none'
+            });
+        });
+
+        $("#tag-selector").on("select2:select select2:unselect", function (e) {
+            selected = $(this).val()
+            if (selected != null) {
+                selectedTags = selected
+            } else {
+                selectedTags = []
+            }
+        })
+
+        $("#tag-selector").select2({
+            formatSelectionCssClass: function (data, container) { return "custom_selector"; },
+        });
 
         function nextDate() {
             // assuming 60 fps for now, you could calculate the actual fps
@@ -185,12 +228,171 @@ function keys(obj){
             light.position.set(sunCoordinates.x,sunCoordinates.y, sunCoordinates.z);
         }
 
-        function filterSatellites(satellites) {
-            return satellites
+        function filterSatellites(selectedTags, tagMap, satellites) {
+            ids = []
+            for (i = 0; i < selectedTags.length; i++) {
+                ids = ids.concat(tagMap[selectedTags[i]])
+            }
+
+            var filtered = satellites.filter(function(sat) {
+                return isInArray(sat.sat_id, ids)
+            })
+
+            return filtered
         }
 
-        function updateSatellites(satellites, date) {
+        function updateLegend(satellites, colorMap) {
+            if (satellites.length > 0) {
+
+                var hashSet = {}
+
+                for (var i = 0; i < satellites.length; i++) {
+                    var sat = satellites[i]
+                    hashSet[sat["name"]] = sat
+                    var color = colorMap[sat["name"]]
+                    sat.scene_object.material.color.setHex(SatColors.hexNotation(color))
+                }
+
+                var satNames = keys(hashSet)
+
+                $("#legend").text("")
+                for (var i = 0; i < satNames.length; i++) {
+                    var sat = hashSet[satNames[i]]
+                    var snippit = [
+                        '<div>',
+                        '<div class="circle" style="background-color: ', colorMap[sat["name"]], '"></div>',
+                        '<div class="label-text"> <a href="', sat["url"], '">', sat["name"], '</a> </div>',
+                        '</div>'
+                    ].join("")
+                    
+                    $("#legend").append(snippit)
+                }
+            } else {
+                $("#legend").text("")
+            }
+        }
+
+        function tleRecordToEcfCoordinates(line1, line2, date) {
+            // Initialize a satellite record
+            var satrec = satellite.twoline2satrec(line1, line2);
+
+            var positionAndVelocity = satellite.propagate(
+                satrec,
+                date.getUTCFullYear(),
+                date.getUTCMonth() + 1,
+                date.getUTCDate(),
+                date.getUTCHours(),
+                date.getUTCMinutes(),
+                date.getUTCSeconds()
+            );
+
+            var gmst = satellite.gstimeFromDate(
+                date.getUTCFullYear(),
+                date.getUTCMonth() + 1, // Note, this function requires months in range 1-12.
+                date.getUTCDate(),
+                date.getUTCHours(),
+                date.getUTCMinutes(),
+                date.getUTCSeconds()
+            );
+
+            var positionEci = positionAndVelocity.position
+            var positionEcf = satellite.eciToEcf(positionEci, gmst)
+            return positionEcf
+        }
+
+        function updateOrbitRings(satellites, date, colorMap) {
+            if (orbitConfig != "off") {
+                for (var i = 0; i < satellites.length; i++) {
+                    if (orbitConfig == "one_orbit") {
+                        var orbitLength = 3 //TODO calculate this
+                    } else if (orbitConfig == "one_day") {
+                        var orbitLength = 24
+                    }
+                    var previousDate = date
+                    var sat = satellites[i]   
+                    var splinepts = [];
+                    
+                    function diffMinutes(date, minutes) {
+                        return new Date(date.getTime() + minutes*60000);
+                    }
+                    var resolution = 3
+                    var numPoints = ((orbitLength*60) * 0.95)/resolution
+                    var geometry = new THREE.Geometry()
+
+                    for (var j = 0; j < numPoints; j++) {
+                        var currentDate = diffMinutes(previousDate, -resolution)
+                        var ecf = tleRecordToEcfCoordinates(
+                            sat["tle_line_1"],
+                            sat["tle_line_2"],
+                            currentDate
+                        )
+
+                        geometry.vertices.push(
+                            new THREE.Vector3(
+                                ecf.x/scale,
+                                ecf.y/scale,
+                                ecf.z/scale
+                            )
+                        )
+                        var previousDate = currentDate
+                    }
+
+                    if ("orbit_object" in sat) {
+                        var oldOrbitObject = sat["orbit_object"]
+                        scene.remove(oldOrbitObject)
+                    }
+
+                    var newOrbitObject = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: colorMap[sat["name"]], linewidth: 2 }))
+                    sat["orbit_object"] = newOrbitObject
+                    scene.add(newOrbitObject)
+                }
+            }
+        }
+
+        function buildColorMap(satellites) {
+            hashSet = {}
+            var colors = new SatColors()
             for (var i = 0; i < satellites.length; i++) {
+                var sat = satellites[i]
+                if (!(sat["name"] in hashSet)) {
+                    hashSet[satellites[i]["name"]] = colors.next()
+                }
+            }
+            return hashSet
+        }
+
+        function updateSatellites(allSatellites, date, selectedTags, tagMap) {
+            // clear all satellites
+            for (var i = 0; i < allSatellites.length; i++) {
+                allSatellites[i]["scene_object"].visible = false
+                if ("orbit_object" in allSatellites[i]) {
+                    allSatellites[i]["orbit_object"].visible = false 
+                }
+            }
+
+            var satellites = filterSatellites(selectedTags, tagMap, allSatellites)
+            
+            function compare(a,b) {
+              if (a.name < b.name)
+                return -1;
+              else if (a.name > b.name)
+                return 1;
+              else 
+                return 0;
+            }
+
+            satellites.sort(compare);
+
+            var colorMap = buildColorMap(satellites)
+
+            updateLegend(satellites, colorMap)
+
+            updateOrbitRings(satellites, date, colorMap)
+            
+
+            for (var i = 0; i < satellites.length; i++) {
+                satellites[i]["scene_object"].visible = true
+
                 // Initialize a satellite record
                 var satrec = satellite.twoline2satrec(
                                 satellites[i]["tle_line_1"],
@@ -312,35 +514,67 @@ function keys(obj){
 
                 var mesh = new THREE.Mesh(
                     geometry,
-                    new THREE.MeshBasicMaterial({ color: satColors(sat_tles[i]["name"])})
+                    new THREE.MeshBasicMaterial({ color: 0x000000})
                 );
 
                 pivot.add(mesh);
 
                 satellites[i] = {
                     scene_object: mesh,
-                    name: sat_tles[i]["name"],
-                    tle_line_1: sat_tles[i]["line1"],
-                    tle_line_2: sat_tles[i]["line2"]
+                    sat_id:       sat_tles[i]["sat_id"],
+                    name:         sat_tles[i]["name"],
+                    tle_line_1:   sat_tles[i]["line1"],
+                    tle_line_2:   sat_tles[i]["line2"]
                 };
             }
             return satellites;
         }
-
-        function satColors(name) {
-            if (name.includes("1C")) {
-                return 0xB54BC1; //purple
-            } else if (name.includes("1E")) {    
-                return 0x96D811; //green
-            } else if (name.includes("ISS")) {
-                return 0xFF0000; //red
-            } else if (name.includes("Hubble")) {
-                return 0x0089FF; //blue
-            } else if (name.includes("Lemur")) {
-                return 0x13E2EC; //cyan
-            } else {
-                return 0xffffff
-            }
-        }
     }
+
+function SatColors(){
+    var purple        = "#B54BC1"
+    var cyan          = "#13E2EC"
+    var red           = "#FF0000"
+    var blue          = "#0089FF"
+    var light_green   = "#96D811"
+    var orange        = "#FF9800"
+    var teal          = "#009688"
+    var yellow        = "#FFEB3B"
+    var grey          = "#9E9E9E"
+    var darker_purple = "#42178E"
+    var puke_green    = "#CDDC39"
+    var brown         = "#795548"
+    var white         = "#FFFFFF"
+    var hot_pink      = "#F900FD"
+
+    this.colors = [
+        light_green,  
+        cyan,         
+        red,          
+        orange,       
+        hot_pink,     
+        blue,         
+        purple,       
+        teal,         
+        yellow,      
+        puke_green,   
+        brown,        
+        grey,         
+        darker_purple,
+        white,        
+    ]
+
+    this.colorIndex = 0
+}
+
+SatColors.prototype.next = function(){
+    var color = this.colors[this.colorIndex]
+    if (this.colorIndex >= this.colors.length - 1) {
+        this.colorIndex = 0
+    } else {
+        this.colorIndex = this.colorIndex + 1
+    }
+    return color
+}
+
 }());

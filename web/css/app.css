@@ -51,6 +51,7 @@ body { margin: 0; overflow: hidden; background-color: #000; }
 #tag-selector {
     width: 100%;
 }
+
 #more_options {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -84,7 +85,15 @@ body { margin: 0; overflow: hidden; background-color: #000; }
     }
 }
 
-.selection_choice {
+.custom_selector {
     background-color: #815FB7;
     color: #fff;
+}
+
+.nicescroll-rails > div:hover {
+    background: rgb(53, 174, 255) !important;
+}
+
+#orbit_paths {
+    margin-top: 20px;
 }

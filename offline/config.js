@@ -1,13 +1,14 @@
 // Tags
-var GEO_SATIONARY_ORBIT = "Geosyncronous Orbit"
+var GEO_SATIONARY_ORBIT = "Geostationary Orbits"
+var GPS                 = "GPS"
 var PLANET_LABS         = "Planet Labs"
-var CUBESAT             = "Cubestats"
+var CUBESAT             = "Cubesats"
 var IMAGING             = "Imaging Satellites"
-var SUN_SYNC_ORBIT      = "Sun Sync Orbit"
+var SUN_SYNC_ORBIT      = "Sun Sync Orbits"
 var SPIRE               = "Spire"
 var NASA                = "NASA"
 var SPACE_STATION       = "Space Stations"
-var USA_MILITARY        = "USA Military"
+var MILITARY            = "Military"
 
 // Each item in this list represents either a constellation of satellites or a single
 // satellite if it is not a member of a constellation. The term constellation here is 
@@ -16,7 +17,7 @@ var USA_MILITARY        = "USA Military"
 var satelliteConfigs = [
     { 
       name: "Global Positioning System",
-      url: "",
+      url: "https://en.wikipedia.org/wiki/List_of_GPS_satellites",
       sat_ids: [
         28874,
         24876,
@@ -48,37 +49,37 @@ var satelliteConfigs = [
         40730,
         41019
       ],
-      tags: [GEO_SATIONARY_ORBIT, USA_MILITARY]
+      tags: [GPS]
     },
     {
        name: "Planet Labs Flock 1C",
-       url: "",
+       url: "http://spaceflight101.com/flock/",
        sat_ids: [40027, 40029, 40041, 40031, 40038, 40026, 40040, 40035, 40035, 40023, 40033],
        tags: [PLANET_LABS, CUBESAT, IMAGING, SUN_SYNC_ORBIT]
     },
     {
        name: "Planet Labs Flock 1E",
-       url: "",
+       url: "http://spaceflight101.com/flock/",
        sat_ids: [40722, 40723, 40724, 40725, 40726, 40727, 40728, 40729, 40737, 40738, 40739, 40740, 40741],
        tags: [PLANET_LABS, CUBESAT, IMAGING]
     },
     {
        name: "Spire Lemur 2",
-       url: "",
+       url: "http://space.skyrocket.de/doc_sdat/lemur-1.htm http://space.skyrocket.de/doc_sdat/lemur-2.htm",
        sat_ids: [40933, 40932, 40935, 40934],
-       tags: [SPIRE, SPIRE_LEMUR_2]
+       tags: [SPIRE, CUBESAT]
     },
     {
        name: "Hubble",
-       url: "",
+       url: "https://en.wikipedia.org/wiki/Hubble_Space_Telescope",
        sat_ids: [20580],
        tags: [NASA, IMAGING]
     },
     {
        name: "ISS",
-       url: "",
+       url: "https://en.wikipedia.org/wiki/International_Space_Station",
        sat_ids: [25544],
-       tags: [NASA, SPACE_STATION]
+       tags: [NASA]
     }
 ]
 

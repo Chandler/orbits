@@ -1,10 +1,11 @@
-// This is an offline script to generate the JSON data that powers the web app
-// This script takes the satellites defined in config.js, looks for corresponding
-// TLEs in the master TLE file, and validates that the TLEs can be parsed by satellites.js
-
-// run from orbits root dir
-// node build_web_data.js
-
+/*
+ * This is an offline script to generate the JSON data that powers the web app
+ * This script takes the satellites defined in config.js, looks for corresponding
+ * TLEs in the master TLE file, and validates that the TLEs can be parsed by satellites.js
+ * 
+ * This should be run everytime tle.txt is updated to keep the TLEs up to date
+ *
+ */
 var fs = require('fs')
 var satelliteConfigs = require('./config.js').configs
 var satelliteJS = require('satellite.js')
@@ -58,7 +59,7 @@ satelliteConfigs.forEach(config => {
 
             if (positionAndVelocity.position && positionAndVelocity.velocity) {
                 tles.push({
-                    id: id,
+                    sat_id: id,
                     name: config["name"],
                     line1: tle.line1,
                     line2: tle.line2
