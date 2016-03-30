@@ -123,6 +123,8 @@ function Config(tles, tags) {
            multiple: true
         })
 
+        // some crazy bug where this only works on the second try
+        $("#tag-selector").select2().val(config.selectedTags)
         $("#tag-selector").select2().val(config.selectedTags)
 
         $("#tag-selector").on("select2:open", function (e) {
@@ -182,9 +184,9 @@ function Config(tles, tags) {
             )
 
         var colorMap = buildColorMap(selectedSatellites)
+
         updateLegend(selectedSatellites, colorMap)
 
-       
         updateSatellites(
             selectedSatellites,
             config.currentDate,
