@@ -14,7 +14,11 @@ function isInArray(value, array) {
   return array.indexOf(value) > -1;
 }
 
-function SatColors(){
+function diffMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
+
+function SatColors() {
     var purple        = "#B54BC1"
     var cyan          = "#13E2EC"
     var red           = "#FF0000"
@@ -41,17 +45,14 @@ function SatColors(){
         teal,         
         yellow,      
         puke_green,   
-        brown,        
-        grey,         
-        darker_purple,
-        white,        
+        brown
     ]
 
     this.colorIndex = 0
 }
 
 // when you run out of colors start at the top again
-SatColors.prototype.next = function(){
+SatColors.prototype.next = function() {
     var color = this.colors[this.colorIndex]
     if (this.colorIndex >= this.colors.length - 1) {
         this.colorIndex = 0
@@ -62,6 +63,4 @@ SatColors.prototype.next = function(){
 }
 
 // convertss #123 to 0x123
-SatColors.prototype.hexNotation = function(color){
-    return "0x" + color.slice(1, color.length)
-}
+SatColors.hexNotation = function(color) { return "0x" + color.slice(1, color.length)}
