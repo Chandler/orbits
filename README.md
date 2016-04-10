@@ -1,3 +1,6 @@
+*DEPRECATED* I did a thing and ported this all into scala.js, it now lives here:
+https://github.com/Chandler/orbits-scala
+
 Visualize Planet Lab's satellites using [TLE orbital projections](https://en.wikipedia.org/wiki/Two-line_element_set)
 
 **DEMO:** http://hipsterdatascience.com/satellites
